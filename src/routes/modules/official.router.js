@@ -1,3 +1,8 @@
+/**
+ * 微信公众号路由模块
+ * 处理所有与微信公众号相关的HTTP请求
+ * 包括服务器验证和消息接收功能
+ */
 import express from "express";
 import crypto from "crypto";
 import { receiveMessages, verification } from "../../controllers/official.controller.js";
@@ -18,6 +23,17 @@ const officialRouter = express.Router();
  */
 officialRouter.get("/", verification);
 
+/**
+ * POST / - 接收微信公众号发送的消息
+ *
+ * 流程：
+ * 1. 使用express.text中间件解析XML格式的请求体
+ * 2. 将解析后的XML消息传递给receiveMessages控制器处理
+ * 3. 返回处理结果
+ *
+ * @param {Object} req - Express请求对象，包含XML格式的消息体
+ * @param {Object} res - Express响应对象
+ */
 officialRouter.post('/',  express.text({ type: ['text/xml', 'application/xml'], limit: '2mb' }), receiveMessages);
 
 export default officialRouter;
