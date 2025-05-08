@@ -126,6 +126,16 @@ npm run dev
 3. **添加新的API endpoints**：在`src/routes/modules/`目录下创建新的路由文件
 4. **修改AI提示词**：调整`src/services/official.service.js`中的AI系统提示词
 
+
+## 编写代码时：
+    - 使用ESM模块语法。
+    - 新增路由时路由名称为名称加Router后缀，例如：user.router.js，这样便于区分路由和控制器。
+    - 新增控制器时控制器名称为名称加Controller后缀，例如：user.controller.js。
+    - 新增模型时模型名称为名称加Model后缀，例如：userModel.js。
+    - 新增中间件时中间件名称为名称加Middleware后缀，例如：user.middleware.js。
+    - 新增工具时工具名称为名称加Util后缀，例如：user.util.js。
+    - 新增服务时服务名称为名称加Service后缀，例如：user.service.js。
+
 ## 常见问题
 
 1. **验证失败**：检查Token配置是否一致，URL是否可以正常访问
