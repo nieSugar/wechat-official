@@ -4,7 +4,6 @@
  * 包括服务器验证和消息接收功能
  */
 import express from "express";
-import crypto from "crypto";
 import { receiveMessages, verification } from "../../controllers/official.controller.js";
 
 const officialRouter = express.Router();

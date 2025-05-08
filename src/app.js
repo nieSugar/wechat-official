@@ -6,6 +6,7 @@
 import express from "express";
 import * as dotenv from "dotenv";
 import mainRouter from "./routes/main.router.js";
+
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -16,13 +17,11 @@ const PORT = process.env.PORT || 3001;
  */
 app.use(express.json());
 
-
-
 /**
  * 注册主路由
  * mainRouter处理所有API请求的分发
  */
-app.use(mainRouter)
+app.use(mainRouter);
 
 /**
  * 启动服务器
