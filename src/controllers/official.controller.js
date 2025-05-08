@@ -4,7 +4,8 @@
  */
 import { XMLParser } from "fast-xml-parser";
 import { textMessageProcessing } from "../services/official.service.js";
-import crypto from 'crypto';
+import crypto from "crypto";
+
 /**
  * 处理微信公众号服务器配置验证
  *

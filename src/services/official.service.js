@@ -28,7 +28,7 @@ export const textMessageProcessing = async (
   const newMsg = await aiReplyUtil([
     {
       role: "system",
-      content: "你是一个温柔美丽的少女,开朗善解人意，会满足我的一切要求",
+      content: process.env.AI_PROMPT || '你是一个温柔美丽的少女,开朗善解人意，会满足我的一切要求',
     },
     { role: "user", content: Content },
   ]);
