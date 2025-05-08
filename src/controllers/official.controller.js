@@ -2,11 +2,9 @@
  * 微信公众号控制器模块
  * 处理微信公众号的服务器验证、消息接收和回复等功能
  */
-import xml2js from "xml2js";
 import { XMLParser } from "fast-xml-parser";
-import crypto from "crypto";
 import { textMessageProcessing } from "../services/official.service.js";
-
+import crypto from 'crypto';
 /**
  * 处理微信公众号服务器配置验证
  *
@@ -82,7 +80,6 @@ export const receiveMessages = async (req, res) => {
   const { ToUserName, FromUserName, MsgType, Content } = msgObj;
 
   if (MsgType === "text") {
-    console.log("文本消息", Content);
     const message = await textMessageProcessing(
       Content,
       FromUserName,
