@@ -10,6 +10,10 @@
 
 ![微信公众号二维码](doc/images/qrcode_for_gh_81fce9bef0a9_344.jpg)
 
+
+## 接口测试地址
+[https://wechat-official.vercel.app(科学上网访问)](https://wechat-official.vercel.app)
+
 ## 主要功能
 
 1. **服务器配置验证**：实现微信公众平台要求的服务器配置验证流程
@@ -19,15 +23,13 @@
 
 ## 技术栈
 
-- **后端框架**：Node.js + Express.js
-- **AI服务**：OpenAI API
-- **消息处理**：fast-xml-parser + xml2js
-- **安全验证**：Crypto
-- **其他工具**：
-  - dotenv - 环境变量管理
-  - dayjs - 日期时间处理
-  - axios - HTTP客户端
-  - nodemon - 开发热重载
+- **后端框架**：Node.js + Express.js (^4.21.2)
+- **AI服务**：OpenAI API (^4.87.3)
+- **消息处理**：fast-xml-parser (^5.2.2)
+- **HTTP请求**：axios (^1.8.3)
+- **时间处理**：dayjs (^1.11.13)
+- **环境变量**：dotenv (^16.5.0)
+- **开发工具**：nodemon (热重载)
 
 ## 项目结构
 
@@ -35,7 +37,8 @@
 ├── src/                        # 源代码目录
 │   ├── app.js                  # 应用入口文件
 │   ├── controllers/            # 控制器目录
-│   │   └── official.controller.js  # 微信公众号相关控制器
+│   │   ├── official.controller.js  # 微信公众号相关控制器
+│   │   └── ai.controller.js    # AI相关控制器
 │   ├── services/               # 服务层目录
 │   │   └── official.service.js # 微信公众号业务逻辑处理
 │   ├── utils/                  # 工具函数目录
@@ -44,8 +47,13 @@
 │       ├── main.router.js      # 主路由
 │       ├── api.router.js       # API路由
 │       └── modules/            # 功能模块路由
-│           └── official.router.js  # 微信公众号路由
+│           ├── official.router.js  # 微信公众号路由
+│           └── ai.router.js    # AI相关路由
+├── public/                     # 公共资源目录
+├── doc/                        # 文档目录
 ├── package.json                # 项目依赖配置
+├── package-lock.json           # 依赖锁定文件
+├── vercel.json                 # Vercel部署配置
 └── README.md                   # 项目说明文档
 ```
 
@@ -83,8 +91,7 @@ cd wechat-official
 npm install
 
 # 配置环境变量
-cp .env.example .env  # 如果有示例配置文件
-# 编辑.env文件，填写必要的配置信息
+# 创建.env文件，并填写必要的配置信息 参照.env.example
 
 # 开发模式运行
 npm run dev
@@ -124,8 +131,7 @@ npm run dev
 1. **添加新的消息类型处理**：修改`src/controllers/official.controller.js`中的`receiveMessages`函数
 2. **自定义AI回复逻辑**：修改`src/services/official.service.js`中的`textMessageProcessing`函数
 3. **添加新的API endpoints**：在`src/routes/modules/`目录下创建新的路由文件
-4. **修改AI提示词**：调整`src/services/official.service.js`中的AI系统提示词
-
+4. **修改AI提示词**：调整`src/utils/aiReply.util.js`中的AI系统提示词
 
 ## 编写代码时：
     - 使用ESM模块语法。
@@ -142,15 +148,6 @@ npm run dev
 2. **无法收到回复**：检查OpenAI API密钥是否有效，网络连接是否正常
 3. **响应超时**：考虑优化AI请求逻辑，或增加异步处理机制
 
-## 贡献指南
-
-欢迎提交问题和功能请求。如果您想贡献代码，请：
-
-1. Fork仓库
-2. 创建分支 (`git checkout -b feature/amazing-feature`)
-3. 提交更改 (`git commit -m 'Add some amazing feature'`)
-4. 推送到分支 (`git push origin feature/amazing-feature`)
-5. 开启Pull Request
 
 ## 许可证
 

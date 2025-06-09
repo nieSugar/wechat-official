@@ -14,7 +14,7 @@ const mainRouter = express.Router();
  * @param {Object} req - Express请求对象
  * @param {Object} res - Express响应对象
  */
-mainRouter.get('/', (req, res) => {
+mainRouter.post('/', (req, res) => {
     res.send('Hello World!');
 });
 

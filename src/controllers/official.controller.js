@@ -2,8 +2,8 @@
  * 微信公众号控制器模块
  * 处理微信公众号的服务器验证、消息接收和回复等功能
  */
-import { XMLParser } from "fast-xml-parser";
-import { textMessageProcessing } from "../services/official.service.js";
+import {XMLParser} from "fast-xml-parser";
+import {textMessageProcessing} from "../services/official.service.js";
 import crypto from "crypto";
 
 /**
