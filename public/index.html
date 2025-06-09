@@ -255,7 +255,7 @@
           <div
             v-for="(message, index) in messages"
             :key="index"
-            :class="['message', message.sender === 'user' ? 'user-message' : 'ai-message']"
+            :class="['message', message.role === 'user' ? 'user-message' : 'ai-message']"
           >
             <div class="message-content">{{ message.content }}</div>
           </div>
@@ -299,7 +299,7 @@
           messages: [
             {
               content: "你好！我是AI助手，有什么可以帮助你的吗？",
-              sender: "ai",
+              role: "assistant",
             },
           ],
           newMessage: "",
@@ -313,7 +313,7 @@
               // 添加用户消息
               this.messages.push({
                 content: message,
-                sender: "user",
+                role: "user",
               });
 
               // 保存当前消息并清空输入框
@@ -331,9 +331,19 @@
 
               try {
                 // 发送请求到API
-                const response = await axios.post("/api/ai", {
-                  content: userMessage,
-                });
+                let response;
+
+                if(this.messages.length > 1){
+                    response = await axios.post("/api/ai", {
+                        messages: this.messages,
+                    });
+                }else{
+                    response = await axios.post("/api/ai", {
+                        content: userMessage,
+                    });
+                }
+
+
 
                 // 移除加载状态
                 this.loading = false;
@@ -343,13 +353,13 @@
                   // 添加AI回复
                   this.messages.push({
                     content: response.data.data,
-                    sender: "ai",
+                    role: "assistant",
                   });
                 } else {
                   // 如果响应格式不符合预期，使用默认回复
                   this.messages.push({
                     content: "抱歉，我收到了您的消息，但无法正确解析回复。",
-                    sender: "ai",
+                    role: "assistant",
                   });
                 }
               } catch (err) {
@@ -369,7 +379,7 @@
                 this.messages.push({
                   content:
                     "网络错误，请稍后再试。如果问题持续存在，请联系技术支持。",
-                  sender: "ai",
+                  role: "assistant",
                 });
               }
             }
