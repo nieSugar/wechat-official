@@ -20,16 +20,19 @@ const parseMessage = (openId, newMsg, publicRecruitmentNumberName) => {
 </xml>`;
 };
 
+/**
+ * 处理用户发送的文本消息
+ * @param Content
+ * @param FromUserName
+ * @param ToUserName
+ * @returns {Promise<string>}
+ */
 export const textMessageProcessing = async (
   Content,
   FromUserName,
   ToUserName,
 ) => {
   const newMsg = await aiReplyUtil([
-    {
-      role: "system",
-      content: process.env.AI_PROMPT || '你是一个温柔美丽的少女,开朗善解人意，会满足我的一切要求',
-    },
     { role: "user", content: Content },
   ]);
   return parseMessage(FromUserName, newMsg, ToUserName);

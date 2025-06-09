@@ -7,7 +7,7 @@ import express from "express";
 import * as dotenv from "dotenv";
 import mainRouter from "./routes/main.router.js";
 import * as path from "node:path";
-import { fileURLToPath } from 'url';
+import {fileURLToPath} from 'url';
 
 dotenv.config();
 const app = express();
