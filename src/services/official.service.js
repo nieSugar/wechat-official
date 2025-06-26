@@ -2,6 +2,7 @@ import aiReplyUtil from "../utils/aiReply.util.js";
 import commandList from "../data/command.config.js";
 import Message from "../models/message.model.js";
 import notionService from "./notion.service.js";
+import { parseCommand, shouldSaveToNotion, shouldProcessAI } from "../utils/command.util.js";
 
 /**
  * 创建回复消息的XML格式
@@ -25,6 +26,9 @@ const parseMessage = (openId, newMsg, publicRecruitmentNumberName) => {
 
 /**
  * 处理用户发送的文本消息
+ * 支持指令系统：
+ * - /ai 前缀：仅进行AI回答，不记录到Notion
+ * - 普通消息：进行AI分析并记录到Notion
  * @param Content
  * @param FromUserName
  * @param ToUserName
@@ -35,16 +39,42 @@ export const textMessageProcessing = async (
   FromUserName,
   ToUserName,
 ) => {
-  const newMsg = await aiReplyUtil([{ role: "user", content: Content }]);
+  // 解析指令
+  const commandResult = parseCommand(Content);
 
-  // 保存消息到Notion数据库
-  await saveMessageToNotion({
-    openId: FromUserName,
-    content: Content,
-    msgType: 'text',
-    aiReply: newMsg,
-    timestamp: new Date(),
-  });
+  let newMsg;
+  let contentToProcess = commandResult.actualContent;
+
+  // 如果是 /ai 指令但没有提供内容，给出提示
+  if (commandResult.isCommand && commandResult.command === '/ai' && !contentToProcess) {
+    newMsg = '请在 /ai 后面输入您想要询问的问题。\n例如：/ai 今天天气怎么样？';
+  } else {
+    // 检查是否需要AI处理
+    if (shouldProcessAI(commandResult.command)) {
+      // 使用实际内容进行AI处理（去除指令前缀）
+      const messageContent = contentToProcess || Content;
+      newMsg = await aiReplyUtil([{ role: "user", content: messageContent }]);
+    } else {
+      // 不需要AI处理的指令，返回相应的回复
+      newMsg = `收到指令：${commandResult.command}`;
+    }
+  }
+
+  // 根据指令配置决定是否保存到Notion
+  if (shouldSaveToNotion(commandResult.command)) {
+    await saveMessageToNotion({
+      openId: FromUserName,
+      content: Content, // 保存原始消息内容（包含指令）
+      msgType: 'text',
+      aiReply: newMsg,
+      timestamp: new Date(),
+      isCommand: commandResult.isCommand,
+      command: commandResult.command,
+    });
+  } else {
+    // 对于不保存到Notion的指令，可以在控制台记录日志
+    console.log(`🤖 指令处理 [${commandResult.command}]: ${contentToProcess} -> ${newMsg.substring(0, 50)}...`);
+  }
 
   return parseMessage(FromUserName, newMsg, ToUserName);
 };

@@ -39,5 +39,9 @@ app.use(mainRouter);
  * 输出服务器地址到控制台
  */
 app.listen(PORT, () => {
-  console.log(`http://localhost:${PORT}`);
+  console.log(`🚀 服务器启动成功！`);
+  console.log(`📡 服务地址: http://localhost:${PORT}`);
+  console.log(`🤖 指令系统已启用:`);
+  console.log(`   - 普通消息: 进行AI分析并记录到Notion`);
+  console.log(`   - /ai 指令: 仅进行AI回答，不记录到Notion`);
 });

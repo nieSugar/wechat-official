@@ -89,6 +89,24 @@ class NotionService {
               ],
             },
           },
+          // AI回复内容
+          'AI回复': {
+            rich_text: {},
+          },
+          // 是否为指令
+          '是否指令': {
+            checkbox: {},
+          },
+          // 指令类型
+          '指令类型': {
+            select: {
+              options: [
+                { name: '/ai', color: 'purple' },
+                { name: '/help', color: 'blue' },
+                { name: '普通消息', color: 'default' },
+              ],
+            },
+          },
           // 创建时间
           '创建时间': {
             date: {},
@@ -174,7 +192,10 @@ class NotionService {
    * @param {Object} messageData - 消息数据
    * @param {string} messageData.content - 消息内容
    * @param {string} messageData.msgType - 消息类型 (text/image/video等)
+   * @param {string} messageData.aiReply - AI回复内容
    * @param {Date} messageData.timestamp - 消息时间戳
+   * @param {boolean} messageData.isCommand - 是否为指令
+   * @param {string} messageData.command - 指令类型
    * @returns {Promise<Object|null>}
    */
   async saveMessage(messageData) {
@@ -183,39 +204,73 @@ class NotionService {
         return null;
       }
 
-      const { content, msgType, timestamp } = messageData;
+      const {
+        content,
+        msgType,
+        aiReply,
+        timestamp,
+        isCommand = false,
+        command = null
+      } = messageData;
+
+      // 构建属性对象
+      const properties = {
+        // 消息内容
+        '消息内容': {
+          title: [
+            {
+              text: {
+                content: content || '空消息',
+              },
+            },
+          ],
+        },
+        // 消息类型
+        '消息类型': {
+          select: {
+            name: msgType || 'text',
+          },
+        },
+        // AI回复内容
+        'AI回复': {
+          rich_text: [
+            {
+              text: {
+                content: aiReply || '无回复',
+              },
+            },
+          ],
+        },
+        // 是否为指令
+        '是否指令': {
+          checkbox: isCommand,
+        },
+        // 指令类型
+        '指令类型': {
+          select: {
+            name: isCommand ? (command || '/unknown') : '普通消息',
+          },
+        },
+        // 创建时间
+        '创建时间': {
+          date: {
+            start: dayjs(timestamp).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
+          },
+        },
+      };
 
       const response = await this.notion.pages.create({
         parent: {
           database_id: this.databaseId,
         },
-        properties: {
-          // 消息内容
-          '消息内容': {
-            title: [
-              {
-                text: {
-                  content: content || '空消息',
-                },
-              },
-            ],
-          },
-          // 消息类型
-          '消息类型': {
-            select: {
-              name: msgType || 'text',
-            },
-          },
-          // 创建时间
-          '创建时间': {
-            date: {
-              start: dayjs(timestamp).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
-            },
-          },
-        },
+        properties,
       });
 
-      console.log('✅ 消息已保存到Notion:', response.id);
+      const logMessage = isCommand
+        ? `✅ 指令消息已保存到Notion [${command}]: ${response.id}`
+        : `✅ 普通消息已保存到Notion: ${response.id}`;
+      console.log(logMessage);
+
       return response;
     } catch (error) {
       console.error('❌ 保存消息到Notion失败:', error.message);
