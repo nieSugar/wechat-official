@@ -2,8 +2,11 @@
  * 微信公众号控制器模块
  * 处理微信公众号的服务器验证、消息接收和回复等功能
  */
-import {XMLParser} from "fast-xml-parser";
-import {textMessageProcessing} from "../services/official.service.js";
+import { XMLParser } from "fast-xml-parser";
+import {
+  saveMessage,
+  textMessageProcessing,
+} from "../services/official.service.js";
 import crypto from "crypto";
 
 /**
@@ -68,6 +71,7 @@ export const verification = (req, res) => {
  * @returns {string} - 返回"success"表示消息已收到
  */
 export const receiveMessages = async (req, res) => {
+  const IS_SAVE_LOG = process.env.IS_SAVE_LOG;
   const xml = req.body; // 由于我们在路由中用 express.text 解析，req.body 就是字符串
   const parser = new XMLParser({ ignoreAttributes: false });
   let msgObj;
@@ -79,6 +83,19 @@ export const receiveMessages = async (req, res) => {
   }
 
   const { ToUserName, FromUserName, MsgType, Content } = msgObj;
+
+  if (
+    IS_SAVE_LOG === "true" ||
+    IS_SAVE_LOG === "TRUE" ||
+    IS_SAVE_LOG === "1" ||
+    IS_SAVE_LOG === true
+  ) {
+    saveMessage(ToUserName, FromUserName, MsgType, Content).then((r) => {
+      console.log('r:',r);
+    }).catch((err) => {
+      console.error(err);
+    });
+  }
 
   if (MsgType === "text") {
     const message = await textMessageProcessing(

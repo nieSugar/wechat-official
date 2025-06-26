@@ -1,4 +1,7 @@
 import aiReplyUtil from "../utils/aiReply.util.js";
+import commandList from "../data/command.config.js";
+import db from "../config/dbConfig.js";
+import { messageLogs } from "../db/schema.js";
 
 /**
  * 创建回复消息的XML格式
@@ -32,8 +35,37 @@ export const textMessageProcessing = async (
   FromUserName,
   ToUserName,
 ) => {
-  const newMsg = await aiReplyUtil([
-    { role: "user", content: Content },
-  ]);
+  const newMsg = await aiReplyUtil([{ role: "user", content: Content }]);
   return parseMessage(FromUserName, newMsg, ToUserName);
+};
+
+export const saveMessage = async (
+  ToUserName,
+  FromUserName,
+  MsgType,
+  Content,
+) => {
+  try {
+   const data = await db.insert(messageLogs).values({
+      toUserName:ToUserName,
+      fromUserName:FromUserName,
+      msgType:MsgType,
+      content:Content,
+    });
+   console.log('data:',data);
+    return 'success'
+  } catch (e) {
+    console.error('error:',e.message);
+  }
+};
+
+const judgmentInstructions = async (Content, FromUserName, ToUserName) => {
+  commandList.forEach((item) => {
+    item.keyword.forEach((keyword) => {
+      if (Content.includes(keyword)) {
+        return item;
+      }
+    });
+    return false;
+  });
 };
