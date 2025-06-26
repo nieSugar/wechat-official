@@ -3,16 +3,35 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const messageSchema = new Schema({
-  ToUserName: String,
-  FromUserName: String,
-  MsgType: String,
-  Content: String,
+  ToUserName: {
+    type: String,
+  },
+  FromUserName: {
+    type: String,
+  },
   CreateTime: {
-    type: Date,
-    default: Date.now,
+    type: Number,
+  },
+  MsgType: {
+    type: String,
+  },
+  MediaId: {
+    type: String,
+  },
+  ThumbMediaId: {
+    type: String,
+  },
+  PicUrl: {
+    type: String,
+  },
+  MsgId: {
+    type: Number,
+  },
+  Content: {
+    type: String,
   },
 });
 
-const Message = mongoose.model("User", messageSchema);
+const Message = mongoose.model("Message", messageSchema);
 
 export default Message;

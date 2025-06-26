@@ -92,13 +92,12 @@ export const receiveMessages = async (req, res) => {
     IS_SAVE_LOG === "1" ||
     IS_SAVE_LOG === true
   ) {
-    saveMessage(ToUserName, FromUserName, MsgType, Content)
+    saveMessage(msgObj)
       .then(() => {})
       .catch((err) => {
         console.error(err);
       });
   }
-  console.log("收到消息", msgObj);
   if (MsgType === "text") {
     const message = await textMessageProcessing(
       Content,
