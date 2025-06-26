@@ -1,6 +1,7 @@
 import aiReplyUtil from "../utils/aiReply.util.js";
 import commandList from "../data/command.config.js";
 import Message from "../models/message.model.js";
+import notionService from "./notion.service.js";
 
 /**
  * 创建回复消息的XML格式
@@ -35,27 +36,65 @@ export const textMessageProcessing = async (
   ToUserName,
 ) => {
   const newMsg = await aiReplyUtil([{ role: "user", content: Content }]);
+
+  // 保存消息到Notion数据库
+  await saveMessageToNotion({
+    openId: FromUserName,
+    content: Content,
+    msgType: 'text',
+    aiReply: newMsg,
+    timestamp: new Date(),
+  });
+
   return parseMessage(FromUserName, newMsg, ToUserName);
 };
 
 export const imageMessageProcessing = async (FromUserName, ToUserName) => {
-  return parseMessage(
-    FromUserName,
-    "暂时不支持解析图片，晚点再来吧",
-    ToUserName,
-  );
+  const replyMsg = "暂时不支持解析图片，晚点再来吧";
+
+  // 保存消息到Notion数据库
+  await saveMessageToNotion({
+    openId: FromUserName,
+    content: '[图片消息]',
+    msgType: 'image',
+    aiReply: replyMsg,
+    timestamp: new Date(),
+  });
+
+  return parseMessage(FromUserName, replyMsg, ToUserName);
 };
 
 export const videoMessageProcessing = async (FromUserName, ToUserName) => {
-  return parseMessage(
-    FromUserName,
-    "暂时不支持解析视频，晚点再来吧",
-    ToUserName,
-  );
+  const replyMsg = "暂时不支持解析视频，晚点再来吧";
+
+  // 保存消息到Notion数据库
+  await saveMessageToNotion({
+    openId: FromUserName,
+    content: '[视频消息]',
+    msgType: 'video',
+    aiReply: replyMsg,
+    timestamp: new Date(),
+  });
+
+  return parseMessage(FromUserName, replyMsg, ToUserName);
 };
 
 export const saveMessage = async (msgObj) => {
   return Message.create(msgObj);
+};
+
+/**
+ * 保存消息到Notion数据库
+ * @param {Object} messageData - 消息数据
+ * @returns {Promise<void>}
+ */
+export const saveMessageToNotion = async (messageData) => {
+  try {
+    await notionService.saveMessage(messageData);
+  } catch (error) {
+    console.error('保存消息到Notion失败:', error.message);
+    // 不抛出错误，避免影响主要的消息处理流程
+  }
 };
 
 const judgmentInstructions = async (Content, FromUserName, ToUserName) => {

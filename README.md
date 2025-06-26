@@ -20,6 +20,7 @@
 2. **消息接收与解析**：接收并解析微信公众号发来的XML格式消息
 3. **AI智能回复**：集成OpenAI API，为用户提供智能聊天回复功能
 4. **消息格式转换**：支持XML和JSON格式的消息转换
+5. **Notion集成**：自动保存用户消息和AI回复到Notion数据库，便于数据管理和分析
 
 ## 技术栈
 
@@ -29,6 +30,7 @@
 - **HTTP请求**：axios (^1.8.3)
 - **时间处理**：dayjs (^1.11.13)
 - **环境变量**：dotenv (^16.5.0)
+- **数据存储**：Notion API (@notionhq/client ^3.1.3)
 - **开发工具**：nodemon (热重载)
 
 ## 项目结构
@@ -52,16 +54,20 @@
 │   │       ├── official.router.js  # 微信公众号路由
 │   │       └── ai.router.js    # AI相关路由
 │   ├── services/               # 服务层目录
-│   │   └── official.service.js # 微信公众号业务逻辑处理
+│   │   ├── official.service.js # 微信公众号业务逻辑处理
+│   │   └── notion.service.js   # Notion数据库集成服务
 │   ├── utils/                  # 工具函数目录
 │   │   ├── aiReply.util.js     # AI回复工具函数
 │   │   └── douyin.util.js      # 抖音相关工具函数
 │   └── view/                   # 视图目录（暂为空）
 ├── public/                     # 公共资源目录
 │   └── index.html              # 首页文件
+├── test/                       # 测试目录
+│   └── notion.test.js          # Notion集成测试文件
 ├── doc/                        # 文档目录
 │   └── images/                 # 图片资源目录
 │       └── qrcode_for_gh_81fce9bef0a9_344.jpg  # 公众号二维码
+├── NOTION_SETUP.md             # Notion集成设置指南
 ├── .cursorrules                # Cursor编辑器规则配置
 ├── .gitignore                  # Git忽略文件配置
 ├── package.json                # 项目依赖配置
@@ -75,6 +81,7 @@
 - Node.js >= 18.x
 - 微信公众号账号
 - OpenAI API密钥
+- Notion账号（可选，用于消息数据存储）
 
 ## 环境变量配置
 
@@ -91,6 +98,11 @@ OFFICIAL_TOKEN=your_token     # 微信公众平台配置的Token
 AI_API_KEY=your_openai_key    # OpenAI API密钥
 AI_API_URL=https://api.openai.com/v1  # OpenAI API URL，可自定义
 AI_MODEL=gpt-3.5-turbo        # 使用的AI模型
+
+# Notion配置（可选）
+NOTION_TOKEN=your_notion_integration_token    # Notion集成令牌
+NOTION_PARENT_PAGE_ID=your_notion_parent_page_id  # 父页面ID（用于创建数据库）
+NOTION_DATABASE_ID=your_notion_database_id    # Notion数据库ID（自动生成）
 ```
 
 ## 安装与运行
@@ -108,6 +120,12 @@ npm install
 
 # 开发模式运行
 npm run dev
+
+# 创建Notion数据库（首次使用）
+npm run create:database
+
+# 测试Notion集成（可选）
+npm run test:notion
 ```
 
 ## 微信公众号配置
@@ -135,7 +153,30 @@ npm run dev
 
 ```
 用户 -> 微信服务器 -> 本服务 -> AI处理 -> 本服务 -> 微信服务器 -> 用户
+                                    ↓
+                              Notion数据库存储
 ```
+
+### Notion集成功能
+
+本项目集成了Notion API，可以自动将用户消息和AI回复保存到Notion数据库中，便于：
+
+1. **消息记录管理**：所有用户消息都会自动保存到Notion数据库
+2. **数据分析**：可以在Notion中创建各种视图和报表分析用户行为
+3. **客服支持**：客服人员可以在Notion中查看用户历史消息
+4. **内容优化**：分析用户常见问题，优化AI回复质量
+
+#### Notion数据库字段说明：
+- **用户ID**：用户的微信OpenID
+- **消息内容**：用户发送的原始消息
+- **消息类型**：text/image/video等
+- **AI回复**：系统生成的回复内容
+- **接收时间**：消息接收的准确时间
+- **状态**：消息处理状态
+- **来源**：消息来源渠道
+
+#### 设置Notion集成：
+详细设置步骤请参考 [NOTION_SETUP.md](./NOTION_SETUP.md) 文档。
 
 ## 二次开发指南
 

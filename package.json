@@ -7,13 +7,16 @@
     "dev": "nodemon src/app.js",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:push": "drizzle-kit push"
+    "db:push": "drizzle-kit push",
+    "test:notion": "node test/notion.test.js",
+    "create:database": "node scripts/create-notion-database.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@notionhq/client": "^3.1.3",
     "axios": "^1.8.3",
     "chalk": "^5.4.1",
     "dayjs": "^1.11.13",
@@ -22,5 +25,8 @@
     "fast-xml-parser": "^5.2.2",
     "mongoose": "^8.16.0",
     "openai": "^4.87.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }
