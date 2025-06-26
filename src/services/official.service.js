@@ -1,5 +1,6 @@
 import aiReplyUtil from "../utils/aiReply.util.js";
 import commandList from "../data/command.config.js";
+import Message from "../models/message.model.js";
 
 /**
  * 创建回复消息的XML格式
@@ -43,7 +44,13 @@ export const saveMessage = async (
   MsgType,
   Content,
 ) => {
-
+  const data = await Message.create({
+    ToUserName,
+    FromUserName,
+    MsgType,
+    Content,
+  });
+  return data;
 };
 
 const judgmentInstructions = async (Content, FromUserName, ToUserName) => {

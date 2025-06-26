@@ -90,11 +90,11 @@ export const receiveMessages = async (req, res) => {
     IS_SAVE_LOG === "1" ||
     IS_SAVE_LOG === true
   ) {
-    saveMessage(ToUserName, FromUserName, MsgType, Content).then((r) => {
-      console.log('r:',r);
-    }).catch((err) => {
-      console.error(err);
-    });
+    saveMessage(ToUserName, FromUserName, MsgType, Content)
+      .then(() => {})
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   if (MsgType === "text") {
