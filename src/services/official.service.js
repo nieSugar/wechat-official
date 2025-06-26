@@ -38,6 +38,18 @@ export const textMessageProcessing = async (
   return parseMessage(FromUserName, newMsg, ToUserName);
 };
 
+export const imageMessageProcessing = async(FromUserName, ToUserName)=>{
+  return parseMessage(FromUserName, '暂时不支持解析图片，晚点再来吧', ToUserName);
+}
+
+export const videoMessageProcessing = async(FromUserName, ToUserName)=>{
+  return parseMessage(FromUserName, '暂时不支持解析视频，晚点再来吧', ToUserName);
+}
+
+
+
+
+
 export const saveMessage = async (
   ToUserName,
   FromUserName,

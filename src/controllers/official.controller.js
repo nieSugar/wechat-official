@@ -4,8 +4,10 @@
  */
 import { XMLParser } from "fast-xml-parser";
 import {
+  imageMessageProcessing,
   saveMessage,
   textMessageProcessing,
+  videoMessageProcessing,
 } from "../services/official.service.js";
 import crypto from "crypto";
 
@@ -96,13 +98,23 @@ export const receiveMessages = async (req, res) => {
         console.error(err);
       });
   }
-
+  console.log("收到消息", msgObj);
   if (MsgType === "text") {
     const message = await textMessageProcessing(
       Content,
       FromUserName,
       ToUserName,
     );
+    return res.send(message);
+  }
+
+  if (MsgType === "image") {
+    const message = await imageMessageProcessing(FromUserName, ToUserName);
+    return res.send(message);
+  }
+
+  if (MsgType === "video") {
+    const message = await videoMessageProcessing(FromUserName, ToUserName);
     return res.send(message);
   }
 
