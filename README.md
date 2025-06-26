@@ -36,21 +36,34 @@
 ```
 ├── src/                        # 源代码目录
 │   ├── app.js                  # 应用入口文件
+│   ├── config/                 # 配置文件目录
+│   │   └── dbConfig.js         # 数据库配置文件
 │   ├── controllers/            # 控制器目录
 │   │   ├── official.controller.js  # 微信公众号相关控制器
 │   │   └── ai.controller.js    # AI相关控制器
+│   ├── data/                   # 数据配置目录
+│   │   └── command.config.js   # 命令配置文件
+│   ├── models/                 # 数据模型目录
+│   │   └── message.model.js    # 消息数据模型
+│   ├── routes/                 # 路由目录
+│   │   ├── main.router.js      # 主路由
+│   │   ├── api.router.js       # API路由
+│   │   └── modules/            # 功能模块路由
+│   │       ├── official.router.js  # 微信公众号路由
+│   │       └── ai.router.js    # AI相关路由
 │   ├── services/               # 服务层目录
 │   │   └── official.service.js # 微信公众号业务逻辑处理
 │   ├── utils/                  # 工具函数目录
-│   │   └── aiReply.util.js     # AI回复工具函数
-│   └── routes/                 # 路由目录
-│       ├── main.router.js      # 主路由
-│       ├── api.router.js       # API路由
-│       └── modules/            # 功能模块路由
-│           ├── official.router.js  # 微信公众号路由
-│           └── ai.router.js    # AI相关路由
+│   │   ├── aiReply.util.js     # AI回复工具函数
+│   │   └── douyin.util.js      # 抖音相关工具函数
+│   └── view/                   # 视图目录（暂为空）
 ├── public/                     # 公共资源目录
+│   └── index.html              # 首页文件
 ├── doc/                        # 文档目录
+│   └── images/                 # 图片资源目录
+│       └── qrcode_for_gh_81fce9bef0a9_344.jpg  # 公众号二维码
+├── .cursorrules                # Cursor编辑器规则配置
+├── .gitignore                  # Git忽略文件配置
 ├── package.json                # 项目依赖配置
 ├── package-lock.json           # 依赖锁定文件
 ├── vercel.json                 # Vercel部署配置

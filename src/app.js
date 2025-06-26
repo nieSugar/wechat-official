@@ -7,20 +7,23 @@ import express from "express";
 import * as dotenv from "dotenv";
 import mainRouter from "./routes/main.router.js";
 import * as path from "node:path";
-import {fileURLToPath} from 'url';
+import { fileURLToPath } from "url";
+import connectDatabase from "./config/dbConfig.js";
 
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// 连接数据库
+connectDatabase().then((res) => {});
 
 /**
  * 配置静态文件中间件
  */
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, "../public")));
 
 /**
  * 配置基础中间件
