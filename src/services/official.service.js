@@ -35,7 +35,7 @@ export const textMessageProcessing = async (
   FromUserName,
   ToUserName,
 ) => {
-  const newMsg = await aiReplyUtil([{ role: "user", content: Content }]);
+  const newMsg = await aiReplyUtil(Content);
 
   // 保存消息到Notion数据库
   await saveMessageToNotion({

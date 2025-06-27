@@ -16,8 +16,6 @@ const aiReplyUtil = async (message) => {
     });
 
     const response = await chat.sendMessage({ message });
-    console.log(response, "response");
-
     return response.text;
   } catch (e) {
     console.log(e);
