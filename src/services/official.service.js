@@ -53,7 +53,9 @@ export const textMessageProcessing = async (
     if (shouldProcessAI(commandResult.command)) {
       // 使用实际内容进行AI处理（去除指令前缀）
       const messageContent = contentToProcess || Content;
-      newMsg = await aiReplyUtil([{ role: "user", content: messageContent }]);
+      console.log(messageContent,'messageContent');
+      
+      newMsg = await aiReplyUtil(messageContent);
     } else {
       // 不需要AI处理的指令，返回相应的回复
       newMsg = `收到指令：${commandResult.command}`;

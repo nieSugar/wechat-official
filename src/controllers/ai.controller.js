@@ -8,14 +8,10 @@ export const aiReply = async (req, res) => {
       code: 4000,
     });
   }
-  const message = [{ role: "user", content }];
-  let reply;
-
-  if (messages) {
-    reply = await aiReplyUtil(messages);
-  } else {
-    reply = await aiReplyUtil(message);
-  }
+  console.log(messages,'messages');
+  console.log(content,'content');
+  
+  const reply = await aiReplyUtil(content);
 
   res.send({
     message: "回复成功",
